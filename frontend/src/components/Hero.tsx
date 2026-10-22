@@ -1,15 +1,16 @@
-import { motion, useScroll, useTransform, useRef } from 'framer-motion'
+import { useRef } from 'react'
+import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/Button'
 import { cn } from '@/lib/utils'
 import { Link } from 'react-router-dom'
+import { Navbar } from './Navbar'
 
 interface HeroProps {
   className?: string
 }
 
 export function Hero({ className }: HeroProps) {
-  const sectionRef = useRef<HTMLSectionElement>(null)
-  const { scrollY } = useScroll({ target: sectionRef, offset: ['start start', 'end start'] })
+  const sectionRef = useRef<HTMLElement>(null)
   
   return (
     <section 
@@ -58,11 +59,9 @@ export function Hero({ className }: HeroProps) {
           transition={{ duration: 0.6, delay: 0.3 }}
         >
           <Link to="/register">
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               className="rounded-full px-8 py-3.5 text-base font-medium bg-foreground text-background hover:opacity-90"
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.98 }}
             >
               Inizia Gratis
             </Button>

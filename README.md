@@ -259,11 +259,27 @@ CREDITSAFE_API_KEY=xxx
 openssl rand -base64 32
 ```
 
-### Deploy su Render/Vercel/Railway
-1. Collega repo GitHub
-2. Imposta variabili d'ambiente
-3. Backend: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-4. Frontend: Build `npm run build` → deploy `dist/`
+### Deploy su Vercel (Vercel Services)
+
+Il `vercel.json` alla radice definisce **un unico progetto Vercel con due servizi** (feature [Services](https://vercel.com/docs/services), beta): `frontend` (Vite) e `backend` (FastAPI), con rewrite `/api/*` → backend.
+
+1. **Impostazioni progetto** (obbligatorie, altrimenti Vercel ignora il blocco `services`):
+   - Root Directory: **radice del repository**
+   - Framework Preset: **Services** — da CLI: `vercel project update --framework services`
+2. **Variabili d'ambiente** (Production):
+   - `DATABASE_URL` — Postgres gestito es. [Neon](https://neon.tech) (usa la connection string *pooled*)
+   - `SECRET_KEY` — `openssl rand -base64 32`
+   - `FRONTEND_URL` — URL del deployment (per CORS)
+3. **Inizializza lo schema** (una volta, dal tuo PC):
+   ```bash
+   cd backend && pip install -r requirements.txt
+   DATABASE_URL="postgresql://..." prisma generate
+   DATABASE_URL="postgresql://..." prisma db push
+   ```
+4. **Deploy**: collega il repo GitHub su Vercel e fai deploy. Il build del backend esegue automaticamente `prisma generate` (`buildCommand` nel `vercel.json`).
+5. **Smoke test**: `GET /api/health` → `{"status": "ok", ...}`.
+
+> Alternativa più tradizionale: frontend statico su Vercel + backend containerizzato (Docker) su Render/Railway/Fly.
 
 ## 🧪 Testing
 

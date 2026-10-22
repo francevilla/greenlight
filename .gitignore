@@ -1,0 +1,25 @@
+# Dipendenze
+node_modules/
+.venv/
+venv/
+
+# Build output
+dist/
+build/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Variabili d'ambiente (i file .env.example vanno committati)
+.env
+.env.local
+.env.*.local
+
+# Vercel
+.vercel
+
+# Sistema / editor
+.DS_Store
+*.log

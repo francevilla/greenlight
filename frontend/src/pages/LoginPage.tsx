@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/Input'
 import { Label } from '@/components/ui/Label'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/Card'
 import { Separator } from '@/components/ui/Separator'
-import { Mail, Lock, User, AlertCircle } from 'lucide-react'
+import { Mail, Lock, AlertCircle } from 'lucide-react'
 import { toast } from '@/components/ui/Toaster'
 
 export default function LoginPage() {
