@@ -19,7 +19,12 @@ app = FastAPI(
     title="Greenlight SaaS API",
     description="API per verifica merito creditizio - Il via libera per i tuoi clienti",
     version="1.0.0",
-    lifespan=lifespan
+    lifespan=lifespan,
+    # Tutta l'app è esposta solo sotto /api: anche docs e OpenAPI devono stare
+    # lì, altrimenti su Vercel finirebbero nel catch-all del frontend.
+    docs_url="/api/docs",
+    redoc_url="/api/redoc",
+    openapi_url="/api/openapi.json",
 )
 
 # CORS
@@ -33,7 +38,9 @@ app.add_middleware(
 
 # Routes
 # Prefisso /api: frontend, proxy Vite, nginx e rewrite Vercel inoltrano
-# il path originale (/api/auth/login, /api/credit-checks, ...)
+# il path originale (/api/auth/login, /api/credit-checks, ...).
+# Su Vercel Services il rewrite `/api/(.*)` -> backend NON rimuove il prefisso:
+# il servizio riceve esattamente /api/..., quindi il mount a /api è la verità.
 app.include_router(auth.router, prefix="/api")
 app.include_router(credit_checks.router, prefix="/api")
 

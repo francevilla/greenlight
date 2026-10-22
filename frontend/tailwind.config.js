@@ -33,15 +33,27 @@ export default {
           foreground: 'hsl(0 0% 100%)',
         },
         ring: 'hsl(0 0% 80%)',
+        // Landing: i quattro stati del semaforo sono i colori del soggetto.
+        ink: 'rgb(11 12 11 / <alpha-value>)',
+        paper: 'rgb(241 241 236 / <alpha-value>)',
+        verde: 'rgb(23 178 106 / <alpha-value>)',
+        giallo: 'rgb(245 197 24 / <alpha-value>)',
+        arancio: 'rgb(240 120 24 / <alpha-value>)',
+        rosso: 'rgb(229 72 77 / <alpha-value>)',
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
-        serif: ['Instrument Serif', 'Georgia', 'serif'],
+        display: ['Archivo', 'Inter', 'system-ui', 'sans-serif'],
       },
       fontSize: {
         'hero-title': ['clamp(3rem, 8vw, 7rem)', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
         'hero-subtitle': ['1.125rem', { lineHeight: '1.5' }],
-        'testimonial': ['clamp(2.5rem, 5vw, 3.5rem)', { lineHeight: '1.2' }],
+        // Cinque gradini, lontani fra loro.
+        small: ['var(--step-small)', { lineHeight: '1.45' }],
+        body: ['var(--step-body)', { lineHeight: '1.55' }],
+        lead: ['var(--step-lead)', { lineHeight: '1.3' }],
+        head: ['var(--step-head)', { lineHeight: '0.95', letterSpacing: '-0.025em' }],
+        display: ['var(--step-display)', { lineHeight: '0.84', letterSpacing: '-0.035em' }],
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-out forwards',
