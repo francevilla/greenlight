@@ -32,11 +32,14 @@ app.add_middleware(
 )
 
 # Routes
-app.include_router(auth.router)
-app.include_router(credit_checks.router)
+# Prefisso /api: frontend, proxy Vite, nginx e rewrite Vercel inoltrano
+# il path originale (/api/auth/login, /api/credit-checks, ...)
+app.include_router(auth.router, prefix="/api")
+app.include_router(credit_checks.router, prefix="/api")
 
 
 @app.get("/health")
+@app.get("/api/health")
 async def health_check():
     return {"status": "ok", "service": "Greenlight SaaS API"}
 

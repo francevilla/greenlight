@@ -111,7 +111,7 @@ class ApiClient {
   }
 
   async getProviders() {
-    const { data } = await this.client.get('/api/providers')
+    const { data } = await this.client.get('/providers')
     return data
   }
 }

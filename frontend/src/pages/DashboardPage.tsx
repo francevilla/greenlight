@@ -7,32 +7,26 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Label } from '@/components/ui/Label'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/Select'
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/Card'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/Avatar'
 import { Progress } from '@/components/ui/Progress'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/Tabs'
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/Tooltip'
 import { Separator } from '@/components/ui/Separator'
 import { toast } from '@/components/ui/Toaster'
-import { 
-  Plus, 
-  Search, 
-  RefreshCw, 
-  Download, 
-  Settings, 
-  LogOut, 
-  User, 
+import {
+  Plus,
+  Search,
+  RefreshCw,
+  LogOut,
   CreditCard,
   BarChart3,
   History,
-  ChevronDown,
-  AlertCircle,
   CheckCircle,
-  XCircle,
   Loader2
 } from 'lucide-react'
-import { formatDate, getStatusColor, getStatusLabel, getProviderName, cn } from '@/lib/utils'
-import type { CreditCheckResponse, StatsResponse, ProviderInfo } from '@/types/api'
+import { formatDate, getProviderName, cn } from '@/lib/utils'
+import type { CreditCheckResponse, StatsResponse } from '@/types/api'
 
 const STATUS_COLORS = {
   VERDE: 'bg-green-500',
@@ -60,11 +54,10 @@ const PROVIDERS = [
 
 export default function DashboardPage() {
   const navigate = useNavigate()
-  const { user, logout, refreshUser } = useAuth()
+  const { user, logout } = useAuth()
   const [checks, setChecks] = useState<CreditCheckResponse[]>([])
   const [stats, setStats] = useState<StatsResponse | null>(null)
   const [loading, setLoading] = useState(true)
-  const [loadingChecks, setLoadingChecks] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [activeTab, setActiveTab] = useState('new')
 

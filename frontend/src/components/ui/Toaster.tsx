@@ -1,7 +1,5 @@
-import { Toast, ToastProvider, ToastViewport, ToastTitle, ToastDescription, ToastClose, ToastAction } from './Toast'
-import { X } from 'lucide-react'
+import { Toast, ToastProvider, ToastViewport, ToastTitle, ToastDescription, ToastClose } from './Toast'
 import { useState, useEffect } from 'react'
-import { cn } from '@/lib/utils'
 
 interface ToastProps {
   title?: string
@@ -73,7 +71,7 @@ export function Toaster() {
       {toasts.map(({ id, props }) => (
         <Toast
           key={id}
-          variant={props.variant || 'default'}
+          variant={props.variant === 'error' ? 'destructive' : (props.variant || 'default')}
           className="fixed bottom-6 right-6 z-50 w-[360px]"
         >
           <div className="grid gap-1">

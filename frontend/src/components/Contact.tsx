@@ -1,9 +1,8 @@
 import { motion } from 'framer-motion'
-import { cn } from '@/lib/utils'
+import { Mail, User, Send } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Label } from '@/components/ui/Label'
-import { Mail, Lock, User, Send } from 'lucide-react'
 
 export function Contact() {
   return (

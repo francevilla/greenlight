@@ -1,14 +1,11 @@
 import { motion } from 'framer-motion'
-import { cn } from '@/lib/utils'
-import { 
-  Shield, 
-  Zap, 
-  BarChart3, 
-  Users, 
-  Globe, 
-  Lock,
-  CreditCard,
-  ArrowRight
+import {
+  Shield,
+  Zap,
+  BarChart3,
+  Users,
+  Globe,
+  Lock
 } from 'lucide-react'
 
 const features = [
