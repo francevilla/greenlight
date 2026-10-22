@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-py"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String         @id @default(uuid())
+  email         String         @unique
+  password      String
+  name          String?
+  plan          Plan           @default(FREE)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  creditChecks  CreditCheck[]
+}
+
+model CreditCheck {
+  id            String         @id @default(uuid())
+  userId        String
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Dati inseriti dall'utente
+  companyName   String
+  vatNumber     String
+  taxCode       String
+  
+  // Risultato provider
+  provider      Provider       @default(CERVED)
+  providerId    String?
+  
+  // Semaforo risultato
+  status        CreditStatus   @default(PENDING)
+  score         Float?
+  rawResponse   Json?
+  
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+enum Plan {
+  FREE
+  BASIC
+  PRO
+  ENTERPRISE
+}
+
+enum Provider {
+  CERVED
+  CRIBIS
+  CREDITSAFE
+}
+
+enum CreditStatus {
+  PENDING
+  VERDE
+  GIALLO
+  ARANCIONE
+  ROSSO
+  ERROR
+}
