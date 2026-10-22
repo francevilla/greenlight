@@ -18,6 +18,10 @@ export default defineConfig({
   },
   server: {
     port: 5173,
+    // Solo sviluppo: consente l'anteprima sui domini del sandbox.
+    // Non ha effetto sul build di produzione.
+    allowedHosts: ['.e2b.app', 'localhost'],
+
     proxy: isVercel
       ? undefined
       : {

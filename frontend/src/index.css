@@ -4,6 +4,7 @@
 
 @layer base {
   :root {
+    /* --- token dell'app (dashboard, auth) --- */
     --background: 0 0% 0%;
     --foreground: 0 0% 100%;
     --muted: 0 0% 5%;
@@ -20,6 +21,32 @@
     --destructive-foreground: 0 0% 100%;
     --ring: 0 0% 80%;
     --hero-subtitle: 210 17% 95%;
+
+    /* --- token della landing ---
+       I colori vengono dal soggetto: il semaforo del credito.
+       Un solo inchiostro, un solo fondo chiaro, quattro segnali. */
+    --ink: #0b0c0b;
+    --paper: #f1f1ec;
+    --verde: #17b26a;
+    --giallo: #f5c518;
+    --arancio: #f07818;
+    --rosso: #e5484d;
+
+    /* cinque gradini, lontani */
+    --step-small: clamp(0.8125rem, 0.79rem + 0.1vw, 0.875rem);
+    --step-body: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+    --step-lead: clamp(1.1875rem, 1.05rem + 0.65vw, 1.625rem);
+    --step-head: clamp(2rem, 1.35rem + 3vw, 3.75rem);
+    --step-display: clamp(2.3rem, 10.6vw, 9.5rem);
+
+    /* una sola coppia di margini per tutta la pagina */
+    --gutter: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    :root {
+      --gutter: 3rem;
+    }
   }
 
   .dark {
@@ -49,43 +76,145 @@
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
+  html {
+    scroll-behavior: smooth;
+  }
+  section[id] {
+    scroll-margin-top: 4.5rem;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+  ::selection {
+    background: var(--ink);
+    color: var(--paper);
+  }
+}
+
+@layer components {
+  /* Una sezione = un campo pieno, senza gap e senza divisori. */
+  .chapter {
+    position: relative;
+    padding-inline: var(--gutter);
+    padding-block: clamp(4rem, 9vh, 7rem);
+  }
+  .chapter-full {
+    min-height: 90svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* Titoli: un solo carattere, peso alto, tracking stretto. */
+  .display {
+    font-family: Archivo, Inter, system-ui, sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 0.84;
+  }
+  .headline {
+    font-family: Archivo, Inter, system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 0.95;
+  }
+
+  /* Bottoni: una sola forma su tutta la pagina. */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 52px;
+    padding: 0 1.5rem;
+    border-radius: 2px;
+    font-weight: 600;
+    font-size: var(--step-body);
+    line-height: 1;
+    transition: transform 120ms ease, background-color 160ms ease, color 160ms ease;
+  }
+  .btn:active {
+    transform: translateY(1px);
+  }
+  .btn:focus-visible {
+    outline: 3px solid currentColor;
+    outline-offset: 3px;
+  }
+  .btn-ink {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .btn-ink:hover {
+    background: #000;
+  }
+  .btn-paper {
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .btn-paper:hover {
+    background: #fff;
+  }
+  .btn-ghost {
+    background: transparent;
+    color: currentColor;
+    box-shadow: inset 0 0 0 2px currentColor;
+  }
+  .btn-ghost:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  /* Frammenti di interfaccia reale: pannelli, righe, numeri che tornano. */
+  .ui {
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: 2px;
+  }
+  .ui-ink {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .num {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+  }
+
+  .link-underline {
+    text-underline-offset: 4px;
+    text-decoration-thickness: 2px;
+  }
 }
 
 @layer utilities {
-  .liquid-glass {
-    background: rgba(255, 255, 255, 0.01);
-    background-blend-mode: luminosity;
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    border: none;
-    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
-    position: relative;
-    overflow: hidden;
+  /* L'accensione: una sola volta, sul semaforo del primo schermo. */
+  @keyframes ignite {
+    0% {
+      opacity: 0.15;
+      transform: scale(1.22);
+    }
+    55% {
+      opacity: 1;
+      transform: scale(0.97);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
-  
-  .liquid-glass::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    padding: 1.4px;
-    background: linear-gradient(180deg,
-      rgba(255,255,255,0.45) 0%,
-      rgba(255,255,255,0.15) 20%,
-      rgba(255,255,255,0) 40%,
-      rgba(255,255,255,0) 60%,
-      rgba(255,255,255,0.15) 80%,
-      rgba(255,255,255,0.45) 100%);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
+  .ignite {
+    animation: ignite 420ms 320ms both cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ignite {
+      animation: none;
+    }
   }
 
   .text-balance {
     text-wrap: balance;
   }
-
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;

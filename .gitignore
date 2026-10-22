@@ -23,3 +23,6 @@ __pycache__/
 # Sistema / editor
 .DS_Store
 *.log
+
+# Working directory della skill di design
+.taste-skill/

@@ -1,18 +1,28 @@
-import { Hero } from '@/components/Hero'
-import { Features } from '@/components/Features'
-import { Testimonial } from '@/components/Testimonial'
-import { Pricing } from '@/components/Pricing'
-import { Contact } from '@/components/Contact'
-import { Footer } from '@/components/Footer'
+import { SiteHeader } from '@/components/landing/SiteHeader'
+import { Hero } from '@/components/landing/Hero'
+import { LiveCheck } from '@/components/landing/LiveCheck'
+import { HowItWorks } from '@/components/landing/HowItWorks'
+import { States } from '@/components/landing/States'
+import { Providers } from '@/components/landing/Providers'
+import { Pricing } from '@/components/landing/Pricing'
+import { Faq } from '@/components/landing/Faq'
+import { Closing } from '@/components/landing/Closing'
+import { Footer } from '@/components/landing/Footer'
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <Hero />
-      <Features />
-      <Testimonial />
-      <Pricing />
-      <Contact />
+    <div className="bg-ink text-paper">
+      <SiteHeader />
+      <main>
+        <Hero />
+        <LiveCheck />
+        <HowItWorks />
+        <States />
+        <Providers />
+        <Pricing />
+        <Faq />
+        <Closing />
+      </main>
       <Footer />
     </div>
   )
