@@ -281,6 +281,20 @@ Il `vercel.json` alla radice definisce **un unico progetto Vercel con due serviz
 
 > Alternativa più tradizionale: frontend statico su Vercel + backend containerizzato (Docker) su Render/Railway/Fly.
 
+### Se il deploy fallisce con errori TS su codice che non esiste più
+
+Sintomo: il log di Vercel segnala errori TypeScript su file o import che nel repository non esistono (es. `Hero.tsx` che importa `useRef` da `framer-motion`). Significa che Vercel sta compilando un **commit vecchio**, non l'ultimo di `master`: è quello che succede cliccando "Redeploy" su un deployment precedente, perché quel comando ricostruisce esattamente il commit di quel deployment.
+
+Come uscirne:
+
+1. Apri il deployment e controlla il campo **Source**: il commit deve essere l'ultimo di `master` (`git log -1 --oneline`).
+2. Ripubblica dal commit corretto: push su `master`, oppure "Deploy latest commit" / Deploy Hook dalla dashboard (non "Redeploy" del vecchio deployment).
+3. Riproduci la build di Vercel in locale: `cd frontend && npm ci && npm run build`.
+
+> `npm run build` usa `tsconfig.build.json`, che disattiva solo `noUnusedLocals`/`noUnusedParameters`: import o variabili inutilizzati non bloccano più il deploy, mentre i veri errori di tipo restano fatali. Il controllo completo (import inutilizzati inclusi) resta disponibile con `npm run typecheck`.
+
+Il workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) esegue `npm ci && npm run build` su ogni push e pull request: se passa lì, passa anche su Vercel.
+
 ## 🧪 Testing
 
 ```bash
@@ -291,8 +305,9 @@ pytest                    # Se aggiungi test
 
 # Frontend
 cd frontend
+npm run typecheck   # tipi + import/variabili inutilizzati
+npm run build       # build di produzione, identica a quella di Vercel
 npm run lint
-npm run build
 ```
 
 ## 📝 Licenza
