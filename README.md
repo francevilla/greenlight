@@ -68,7 +68,7 @@ docker-compose up -d
 
 # Frontend: http://localhost
 # Backend API: http://localhost:8000
-# API Docs: http://localhost:8000/docs
+# API Docs: http://localhost:8000/api/docs
 ```
 
 ### Sviluppo Locale
@@ -261,7 +261,18 @@ openssl rand -base64 32
 
 ### Deploy su Vercel (Vercel Services)
 
-Il `vercel.json` alla radice definisce **un unico progetto Vercel con due servizi** (feature [Services](https://vercel.com/docs/services), beta): `frontend` (Vite) e `backend` (FastAPI), con rewrite `/api/*` → backend.
+Il `vercel.json` alla radice definisce **un unico progetto Vercel con due servizi** (feature [Services](https://vercel.com/docs/services), beta) serviti sullo stesso dominio:
+
+| Servizio | Root | Framework | Pubblico su |
+| --- | --- | --- | --- |
+| `frontend` | `frontend/` | Vite | `/(.*)` — catch-all, **ultimo** per specificità |
+| `backend` | `backend/` | FastAPI | `/api/(.*)` |
+
+Il rewrite non rimuove il prefisso: `GET /api/health` arriva al backend come `/api/health`, che è esattamente dove sono montati i router, `docs` e OpenAPI (`/api/docs`, `/api/redoc`, `/api/openapi.json`). Il backend non ha altre vie pubbliche.
+
+**Nessun service binding.** Un binding serve quando un servizio chiama un altro servizio *lato server* (runtime delle funzioni). Qui l'unico client dell'API è il browser, che chiama `/api` in same-origin passando dal rewrite pubblico, mentre il frontend Vite è un bundle statico senza codice server. I provider di credito (Cerved, Cribis, Credit Safe) sono API esterne e non servizi del progetto.
+
+Il servizio `frontend` ha un rewrite interno `/(.*)` → `/index.html` per il client-side routing di React Router (refresh diretto su `/dashboard` o `/login` senza 404). I file statici vengono risolti prima dei rewrite, quindi gli asset in `/assets/*` non vengono toccati.
 
 1. **Impostazioni progetto** (obbligatorie, altrimenti Vercel ignora il blocco `services`):
    - Root Directory: **radice del repository**
@@ -269,7 +280,8 @@ Il `vercel.json` alla radice definisce **un unico progetto Vercel con due serviz
 2. **Variabili d'ambiente** (Production):
    - `DATABASE_URL` — Postgres gestito es. [Neon](https://neon.tech) (usa la connection string *pooled*)
    - `SECRET_KEY` — `openssl rand -base64 32`
-   - `FRONTEND_URL` — URL del deployment (per CORS)
+   - `FRONTEND_URL` — URL del deployment (per CORS; in same-origin non è necessario)
+   - **Non impostare `VITE_API_URL`**: deve restare relativa (`/api`), altrimenti il browser cercherebbe il backend interno.
 3. **Inizializza lo schema** (una volta, dal tuo PC):
    ```bash
    cd backend && pip install -r requirements.txt
@@ -277,7 +289,9 @@ Il `vercel.json` alla radice definisce **un unico progetto Vercel con due serviz
    DATABASE_URL="postgresql://..." prisma db push
    ```
 4. **Deploy**: collega il repo GitHub su Vercel e fai deploy. Il build del backend esegue automaticamente `prisma generate` (`buildCommand` nel `vercel.json`).
-5. **Smoke test**: `GET /api/health` → `{"status": "ok", ...}`.
+5. **Smoke test**: `GET /api/health` → `{"status": "ok", ...}`; docs su `/api/docs`.
+
+**Sviluppo locale con i servizi**: `vercel dev` (oppure `vercel dev -L` per lavorare senza autenticazione) avvia entrambi i servizi e instrada `/api` come in produzione. Il proxy di Vite è disattivato automaticamente quando la variabile `VERCEL` è presente, per non sovrascrivere quel routing; con il classico `npm run dev` il proxy punta a `http://localhost:8000` (override con `BACKEND_DEV_URL`).
 
 > Alternativa più tradizionale: frontend statico su Vercel + backend containerizzato (Docker) su Render/Railway/Fly.
 
@@ -301,7 +315,7 @@ Il workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) esegue `npm c
 # Backend
 cd backend
 pytest                    # Se aggiungi test
-# Manuale: http://localhost:8000/docs
+# Manuale: http://localhost:8000/api/docs
 
 # Frontend
 cd frontend

@@ -1,6 +1,10 @@
 import axios, { AxiosInstance, InternalAxiosRequestConfig } from 'axios'
 import Cookies from 'js-cookie'
 
+// URL relativa: browser e backend condividono lo stesso dominio e Vercel
+// Services instrada /api/* al servizio backend (che resta interno).
+// Non impostare VITE_API_URL a un host del backend: non è raggiungibile
+// pubblicamente e il valore verrebbe congelato nel bundle al build.
 const API_URL = import.meta.env.VITE_API_URL || '/api'
 
 class ApiClient {
