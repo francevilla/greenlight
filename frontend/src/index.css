@@ -1,99 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+
+@import './design-tokens.css';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@layer base {
-  :root {
-    /* --- token dell'app (dashboard, auth) --- */
-    --background: 0 0% 0%;
-    --foreground: 0 0% 100%;
-    --muted: 0 0% 5%;
-    --muted-foreground: 0 0% 65%;
-    --card: 0 0% 5%;
-    --border: 0 0% 20%;
-    --primary: 0 0% 100%;
-    --primary-foreground: 0 0% 0%;
-    --secondary: 0 0% 15%;
-    --secondary-foreground: 0 0% 100%;
-    --accent: 0 0% 100%;
-    --accent-foreground: 0 0% 0%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 100%;
-    --ring: 0 0% 80%;
-    --hero-subtitle: 210 17% 95%;
-
-    /* --- token della landing ---
-       I colori vengono dal soggetto: il semaforo del credito.
-       Un solo inchiostro, un solo fondo chiaro, quattro segnali. */
-    --ink: #0b0c0b;
-    --paper: #f1f1ec;
-    --verde: #17b26a;
-    --giallo: #f5c518;
-    --arancio: #f07818;
-    --rosso: #e5484d;
-
-    /* cinque gradini, lontani */
-    --step-small: clamp(0.8125rem, 0.79rem + 0.1vw, 0.875rem);
-    --step-body: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
-    --step-lead: clamp(1.1875rem, 1.05rem + 0.65vw, 1.625rem);
-    --step-head: clamp(2rem, 1.35rem + 3vw, 3.75rem);
-    --step-display: clamp(2.3rem, 10.6vw, 9.5rem);
-
-    /* una sola coppia di margini per tutta la pagina */
-    --gutter: 1.5rem;
-  }
-
-  @media (min-width: 768px) {
-    :root {
-      --gutter: 3rem;
-    }
-  }
-
-  .dark {
-    --background: 0 0% 0%;
-    --foreground: 0 0% 100%;
-    --muted: 0 0% 5%;
-    --muted-foreground: 0 0% 65%;
-    --card: 0 0% 5%;
-    --border: 0 0% 20%;
-    --primary: 0 0% 100%;
-    --primary-foreground: 0 0% 0%;
-    --secondary: 0 0% 15%;
-    --secondary-foreground: 0 0% 100%;
-    --accent: 0 0% 100%;
-    --accent-foreground: 0 0% 0%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 100%;
-    --ring: 0 0% 80%;
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
-  }
-  html {
-    scroll-behavior: smooth;
-  }
-  section[id] {
-    scroll-margin-top: 4.5rem;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    html {
-      scroll-behavior: auto;
-    }
-  }
-  ::selection {
-    background: var(--ink);
-    color: var(--paper);
-  }
-}
 
 @layer components {
   /* Una sezione = un campo pieno, senza gap e senza divisori. */
@@ -190,30 +104,6 @@
 }
 
 @layer utilities {
-  /* L'accensione: una sola volta, sul semaforo del primo schermo. */
-  @keyframes ignite {
-    0% {
-      opacity: 0.15;
-      transform: scale(1.22);
-    }
-    55% {
-      opacity: 1;
-      transform: scale(0.97);
-    }
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-  .ignite {
-    animation: ignite 420ms 320ms both cubic-bezier(0.2, 0.7, 0.3, 1);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .ignite {
-      animation: none;
-    }
-  }
-
   .text-balance {
     text-wrap: balance;
   }
@@ -224,38 +114,4 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
-}
-
-/* --- Liquid glass (specifica motionsites) --- */
-.liquid-glass {
-  background: rgba(255, 255, 255, 0.01);
-  background-blend-mode: luminosity;
-  -webkit-backdrop-filter: blur(4px);
-  backdrop-filter: blur(4px);
-  border: none;
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
-  position: relative;
-  overflow: hidden;
-}
-
-.liquid-glass::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1.4px;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.45) 0%,
-    rgba(255, 255, 255, 0.15) 20%,
-    rgba(255, 255, 255, 0) 40%,
-    rgba(255, 255, 255, 0) 60%,
-    rgba(255, 255, 255, 0.15) 80%,
-    rgba(255, 255, 255, 0.45) 100%
-  );
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask-composite: exclude;
-  pointer-events: none;
 }

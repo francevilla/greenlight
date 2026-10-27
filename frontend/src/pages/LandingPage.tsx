@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ArrowRight, Globe, LogIn, UserPlus } from 'lucide-react'
-import { HeroVideo } from '@/components/cinematic/HeroVideo'
+import { CreditScoreGauge } from '@/components/ui/CreditScoreGauge'
 
-const SERIF = "'Instrument Serif', serif"
+const SERIF = "'Source Serif 4', 'Instrument Serif', serif"
 
 export default function LandingPage() {
   const navigate = useNavigate()
@@ -16,14 +16,12 @@ export default function LandingPage() {
   }
 
   return (
-    <div className="relative flex min-h-screen flex-col overflow-hidden bg-black">
-      <HeroVideo />
-
+    <div className="relative flex min-h-screen flex-col overflow-hidden bg-background">
       {/* Navigazione */}
       <nav className="relative z-20 pl-6 pr-6 py-6">
         <div className="mx-auto flex max-w-5xl items-center justify-between rounded-full px-6 py-3">
           <div className="flex items-center gap-8">
-            <Link to="/" className="flex items-center gap-2 text-lg font-semibold text-white">
+            <Link to="/" className="flex items-center gap-2 text-lg font-semibold text-foreground">
               <Globe size={24} />
               <span>Greenlight</span>
             </Link>
@@ -31,19 +29,19 @@ export default function LandingPage() {
             <div className="hidden items-center gap-8 md:flex">
               <a
                 href="/semaforo#stati"
-                className="text-sm font-medium text-white/80 transition-colors hover:text-white"
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
               >
                 Il prodotto
               </a>
               <a
                 href="/semaforo#prezzi"
-                className="text-sm font-medium text-white/80 transition-colors hover:text-white"
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
               >
                 Prezzi
               </a>
               <a
                 href="/semaforo#domande"
-                className="text-sm font-medium text-white/80 transition-colors hover:text-white"
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
               >
                 Domande
               </a>
@@ -51,23 +49,26 @@ export default function LandingPage() {
           </div>
 
           <div className="flex items-center gap-4">
-            <Link to="/register" className="text-sm font-medium text-white">
+            <Link to="/register" className="text-sm font-medium text-foreground">
               Registrati
             </Link>
-            <Link to="/login" className="liquid-glass rounded-full px-6 py-2 text-sm text-white">
+            <Link
+              to="/login"
+              className="liquid-glass rounded-full px-6 py-2 text-sm text-foreground"
+            >
               Accedi
             </Link>
           </div>
         </div>
       </nav>
 
-      {/* Contenuto */}
-      <div className="relative z-10 flex flex-1 -translate-y-[20%] flex-col items-center justify-center px-6 py-12 text-center">
+      {/* Contenuto Hero */}
+      <div className="relative z-10 flex flex-1 -translate-y-[10%] flex-col items-center justify-center px-6 py-12 text-center">
         <h1
-          className="mb-8 whitespace-normal text-5xl tracking-tight text-white md:whitespace-nowrap md:text-6xl lg:text-7xl"
+          className="mb-8 whitespace-normal text-display uppercase md:whitespace-nowrap"
           style={{ fontFamily: SERIF }}
         >
-          Il semaforo del credito
+          Il semaforo del credito<br /> per le tue decisioni.
         </h1>
 
         <div className="w-full max-w-xl space-y-4">
@@ -78,18 +79,18 @@ export default function LandingPage() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="La tua email di lavoro"
               aria-label="Email di lavoro"
-              className="min-w-0 flex-1 bg-transparent text-base text-white placeholder:text-white/40 focus:outline-none"
+              className="min-w-0 flex-1 bg-transparent text-base text-foreground placeholder:text-muted-foreground focus:outline-none"
             />
             <button
               type="submit"
               aria-label="Continua"
-              className="rounded-full bg-white p-3 text-black transition-transform hover:scale-[1.03] active:scale-95"
+              className="rounded-full bg-primary text-primary-foreground p-3 transition-transform hover:scale-[1.03] active:scale-95"
             >
               <ArrowRight size={20} />
             </button>
           </form>
 
-          <p className="px-4 text-sm leading-relaxed text-white">
+          <p className="px-4 text-sm leading-relaxed text-muted-foreground">
             Greenlight interroga Cerved, Cribis e Credit Safe su una partita IVA e restituisce il
             semaforo: verde firmi, rosso ti fermi. Cinque verifiche gratis, senza carta.
           </p>
@@ -97,11 +98,15 @@ export default function LandingPage() {
           <div className="flex justify-center">
             <Link
               to="/semaforo"
-              className="liquid-glass rounded-full px-8 py-3 text-sm font-medium text-white transition-colors hover:bg-white/5"
+              className="liquid-glass rounded-full px-8 py-3 text-sm font-medium text-foreground transition-colors hover:bg-primary/10"
             >
               Il manifesto
             </Link>
           </div>
+        </div>
+
+        <div className="mt-12 flex items-center justify-center gap-8">
+          <CreditScoreGauge status="VERDE" label="Affidabile" size="xl" ignite />
         </div>
       </div>
 
@@ -110,21 +115,21 @@ export default function LandingPage() {
         <Link
           to="/semaforo"
           aria-label="La pagina completa del prodotto"
-          className="liquid-glass rounded-full p-4 text-white/80 transition-all hover:bg-white/5 hover:text-white"
+          className="liquid-glass rounded-full p-4 text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary"
         >
           <Globe size={20} />
         </Link>
         <Link
           to="/login"
           aria-label="Accedi al tuo account"
-          className="liquid-glass rounded-full p-4 text-white/80 transition-all hover:bg-white/5 hover:text-white"
+          className="liquid-glass rounded-full p-4 text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary"
         >
           <LogIn size={20} />
         </Link>
         <Link
           to="/register"
           aria-label="Crea un account"
-          className="liquid-glass rounded-full p-4 text-white/80 transition-all hover:bg-white/5 hover:text-white"
+          className="liquid-glass rounded-full p-4 text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary"
         >
           <UserPlus size={20} />
         </Link>

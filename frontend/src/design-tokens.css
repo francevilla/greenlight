@@ -1,0 +1,196 @@
+/**
+ * Greenlight SaaS — Design Tokens
+ * Italian Editorial direction.
+ * Importare in src/index.css dopo @tailwind base.
+ */
+
+@layer base {
+  :root {
+    /* --- Neutral light mode (carta / inchiostro soft) --- */
+    --background: 0 0% 98%;
+    --foreground: 0 0% 9%;
+    --muted: 0 0% 94%;
+    --muted-foreground: 0 0% 45%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 9%;
+    --border: 0 0% 88%;
+    --primary: 142 71% 45%;      /* verde foresta #22c55e */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 90%;
+    --secondary-foreground: 0 0% 9%;
+    --accent: 26 30% 55%;         /* oro spento #b08968 */
+    --accent-foreground: 0 0% 9%;
+    --destructive: 358 52% 59%;   /* rosso semaforo #e5484d */
+    --destructive-foreground: 0 0% 100%;
+    --ring: 0 0% 70%;
+
+    /* --- Semantic semaforo (WCAG AA su bianco e nero) --- */
+    --semantic-verde: #17b26a;
+    --semantic-giallo: #f5c518;
+    --semantic-arancio: #f07818;
+    --semantic-rosso: #e5484d;
+    --semantic-pending: #6366f1;
+    --semantic-error: #78716c;
+
+    /* --- Landing editorial --- */
+    --ink: #0b0c0b;
+    --paper: #f1f1ec;
+    --verde: #17b26a;
+    --giallo: #f5c518;
+    --arancio: #f07818;
+    --rosso: #e5484d;
+
+    /* --- Tipografia scale --- */
+    --step-small: clamp(0.8125rem, 0.79rem + 0.1vw, 0.875rem);
+    --step-body: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+    --step-lead: clamp(1.1875rem, 1.05rem + 0.65vw, 1.625rem);
+    --step-head: clamp(2rem, 1.35rem + 3vw, 3.75rem);
+    --step-display: clamp(2.3rem, 10.6vw, 9.5rem);
+
+    /* --- Spaziatura --- */
+    --gutter: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    :root {
+      --gutter: 3rem;
+    }
+  }
+
+  /* --- Dark mode (inchiostro puro) --- */
+  .dark {
+    --background: 0 0% 4%;
+    --foreground: 0 0% 98%;
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 55%;
+    --card: 0 0% 7%;
+    --card-foreground: 0 0% 98%;
+    --border: 0 0% 20%;
+    --primary: 142 71% 45%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 98%;
+    --accent: 26 30% 55%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 358 52% 59%;
+    --destructive-foreground: 0 0% 100%;
+    --ring: 0 0% 45%;
+  }
+
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  section[id] {
+    scroll-margin-top: 4.5rem;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+  ::selection {
+    background: var(--ink);
+    color: var(--paper);
+  }
+}
+
+/**
+ * Liquid glass (motionsites spec)
+ */
+.liquid-glass {
+  background: rgba(255, 255, 255, 0.01);
+  background-blend-mode: luminosity;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  border: none;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+.liquid-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.4px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.45) 0%,
+    rgba(255, 255, 255, 0.15) 20%,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(255, 255, 255, 0) 60%,
+    rgba(255, 255, 255, 0.15) 80%,
+    rgba(255, 255, 255, 0.45) 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/**
+ * Animazioni motion
+ */
+@keyframes ignite {
+  0% { opacity: 0.15; transform: scale(1.22); }
+  55% { opacity: 1; transform: scale(0.97); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.ignite {
+  animation: ignite 420ms 320ms both cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .ignite { animation: none; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.slide-up {
+  animation: slideUp 0.6s ease-out forwards;
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+.pulse-slow {
+  animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/**
+ * Utilità semaforo (accessibilità: testo nero su giallo)
+ */
+.bg-semantic-verde { background-color: var(--semantic-verde); }
+.bg-semantic-giallo { background-color: var(--semantic-giallo); color: #0b0c0b; }
+.bg-semantic-arancio { background-color: var(--semantic-arancio); }
+.bg-semantic-rosso { background-color: var(--semantic-rosso); }
+.bg-semantic-pending { background-color: var(--semantic-pending); }
+.bg-semantic-error { background-color: var(--semantic-error); }
+
+.text-semantic-verde { color: var(--semantic-verde); }
+.text-semantic-giallo { color: var(--semantic-giallo); }
+.text-semantic-arancio { color: var(--semantic-arancio); }
+.text-semantic-rosso { color: var(--semantic-rosso); }
+
+.border-semantic-verde { border-color: var(--semantic-verde); }
+.border-semantic-giallo { border-color: var(--semantic-giallo); }
+.border-semantic-arancio { border-color: var(--semantic-arancio); }
+.border-semantic-rosso { border-color: var(--semantic-rosso); }
