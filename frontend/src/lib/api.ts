@@ -92,7 +92,7 @@ class ApiClient {
   async createCreditCheck(data: {
     companyName: string
     vatNumber: string
-    taxCode: string
+    taxCode?: string
     provider: string
   }) {
     const { data: result } = await this.client.post('/credit-checks', data)

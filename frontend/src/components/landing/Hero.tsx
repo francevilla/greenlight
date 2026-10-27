@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Semaforo } from './Semaforo'
+import { trackFunnel } from '@/lib/analytics'
 
 /**
  * Primo campo: verde. Il nome è verde, il prodotto è un verde,
@@ -29,12 +30,16 @@ export function Hero() {
           </p>
 
           <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
-            <a href="#prova" className="btn btn-ink">
-              Verifica un’azienda
-            </a>
-            <Link to="/register" className="btn btn-ghost">
-              Inizia gratis
+            <Link
+              to="/register"
+              className="btn btn-ink"
+              onClick={() => trackFunnel('hero_cta_click')}
+            >
+              Verifica un’azienda — 5 gratis
             </Link>
+            <a href="#prova" className="btn btn-ghost">
+              Guarda un esempio
+            </a>
           </div>
         </div>
 

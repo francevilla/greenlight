@@ -45,7 +45,7 @@
     --step-body: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
     --step-lead: clamp(1.1875rem, 1.05rem + 0.65vw, 1.625rem);
     --step-head: clamp(2rem, 1.35rem + 3vw, 3.75rem);
-    --step-display: clamp(2.3rem, 10.6vw, 9.5rem);
+    --step-display: clamp(2.3rem, 10.6vw, 7.5rem);
 
     /* --- Spaziatura --- */
     --gutter: 1.5rem;

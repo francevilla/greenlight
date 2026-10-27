@@ -9,6 +9,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Separator } from '@/components/ui/Separator'
 import { Mail, Lock, User, AlertCircle } from 'lucide-react'
 import { toast } from '@/components/ui/Toaster'
+import { trackFunnel } from '@/lib/analytics'
 
 export default function RegisterPage() {
   const navigate = useNavigate()
@@ -36,10 +37,12 @@ export default function RegisterPage() {
     }
 
     setLoading(true)
+    trackFunnel('register_start')
 
     try {
       await register(email, password, name)
       toast.success('Account creato con successo!')
+      trackFunnel('register_complete')
       navigate('/dashboard')
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Errore durante la registrazione'
@@ -179,9 +182,13 @@ export default function RegisterPage() {
           className="text-center text-xs text-muted-foreground mt-6"
         >
           Registrandoti accetti i nostri{' '}
-          <Link to="#" className="underline hover:text-foreground">Termini di Servizio</Link>{' '}
+          <Link to="/legali#termini" className="underline hover:text-foreground">
+            Termini di Servizio
+          </Link>{' '}
           e la{' '}
-          <Link to="#" className="underline hover:text-foreground">Privacy Policy</Link>
+          <Link to="/legali#privacy" className="underline hover:text-foreground">
+            Privacy Policy
+          </Link>
         </motion.p>
       </motion.div>
     </div>

@@ -1,54 +1,18 @@
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
-
-type Tono = 'ink' | 'paper'
+import { Menu, X } from 'lucide-react'
 
 /**
- * Barra fissa che prende l'inchiostro del capitolo che ha sotto.
- * È l'unico movimento "di pagina" della landing: il colore cambia
- * esattamente sui bordi dei campi, mai a metà di un paragrafo.
+ * Barra fissa sempre leggibile: fondo carta, testo inchiostro,
+ * bordo inferiore. Su mobile si apre un pannello con le sezioni
+ * e la CTA "Inizia gratis" resta sempre visibile.
  */
 export function SiteHeader() {
-  const [tono, setTono] = useState<Tono>('ink')
-  const headerRef = useRef<HTMLElement | null>(null)
-
-  useEffect(() => {
-    let raf = 0
-
-    const leggi = () => {
-      raf = 0
-      const nodi = document.elementsFromPoint(window.innerWidth / 2, 64)
-      for (const nodo of nodi) {
-        if (headerRef.current?.contains(nodo)) continue
-        const campo = (nodo as HTMLElement).closest('[data-tone]')
-        const valore = campo?.getAttribute('data-tone')
-        if (valore === 'ink' || valore === 'paper') {
-          setTono(valore)
-          return
-        }
-      }
-    }
-
-    const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(leggi)
-    }
-
-    leggi()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    window.addEventListener('resize', onScroll)
-    return () => {
-      window.removeEventListener('scroll', onScroll)
-      window.removeEventListener('resize', onScroll)
-      if (raf) cancelAnimationFrame(raf)
-    }
-  }, [])
-
-  const testo = tono === 'ink' ? 'text-ink' : 'text-paper'
+  const [open, setOpen] = useState(false)
 
   return (
     <header
-      ref={headerRef}
-      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${testo}`}
+      className="fixed inset-x-0 top-0 z-50 border-b border-border bg-paper/[0.85] backdrop-blur-md text-ink transition-colors duration-300"
       style={{ paddingInline: 'var(--gutter)' }}
     >
       <div className="flex h-16 items-center justify-between gap-6">
@@ -71,18 +35,53 @@ export function SiteHeader() {
           </a>
         </nav>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 md:gap-4">
           <Link to="/login" className="text-small font-medium link-underline hover:underline">
             Accedi
           </Link>
           <Link
             to="/register"
-            className="hidden text-small font-semibold link-underline hover:underline sm:inline"
+            className="btn btn-ink text-xs md:text-small px-3 py-1.5 min-h-[auto]"
           >
             Inizia gratis
           </Link>
+          <button
+            onClick={() => setOpen(!open)}
+            className="md:hidden p-2 text-ink hover:text-ink/80"
+            aria-label={open ? 'Chiudi menu' : 'Apri menu'}
+            aria-expanded={open}
+          >
+            {open ? <X size={20} /> : <Menu size={20} />}
+          </button>
         </div>
       </div>
+
+      {open && (
+        <div className="md:hidden absolute left-0 right-0 top-16 bg-paper border-b border-border p-4 z-40">
+          <nav className="flex flex-col gap-3" aria-label="Menu mobile">
+            <a href="#prova" className="text-small font-medium block py-2">
+              Prova
+            </a>
+            <a href="#come-funziona" className="text-small font-medium block py-2">
+              Come funziona
+            </a>
+            <a href="#prezzi" className="text-small font-medium block py-2">
+              Prezzi
+            </a>
+            <a href="#domande" className="text-small font-medium block py-2">
+              Domande
+            </a>
+          </nav>
+          <div className="mt-4 flex flex-col gap-2">
+            <Link to="/register" className="btn btn-ink w-fit">
+              Inizia gratis
+            </Link>
+            <Link to="/login" className="text-small font-medium link-underline">
+              Accedi
+            </Link>
+          </div>
+        </div>
+      )}
     </header>
   )
 }

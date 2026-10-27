@@ -101,6 +101,18 @@
     text-underline-offset: 4px;
     text-decoration-thickness: 2px;
   }
+  a:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+  /* Tap target minimo 44×44 px (accessibilità mobile) */
+  .tap-target {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 @layer utilities {

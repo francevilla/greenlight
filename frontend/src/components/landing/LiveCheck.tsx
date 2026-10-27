@@ -1,18 +1,20 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import {
   ESEMPI_DEMO,
-  STATO_NOME,
   SOGLIE,
+  STATO_NOME,
   verificaDemo,
   type EsitoVerifica,
 } from '@/lib/demo'
+import { trackFunnel } from '@/lib/analytics'
 import { Semaforo } from './Semaforo'
 
 type Fase = 'idle' | 'interroga' | 'esito'
 
 /**
- * La cosa viva della pagina: si incolla una partita IVA e il semaforo
- * si accende. I dati sono di esempio e la pagina lo dice, in chiaro.
+ * La cosa viva della pagina: si sceglie un esempio e il semaforo si accende.
+ * I dati sono di esempio e la pagina lo dice, in chiaro, con un badge permanente.
  */
 export function LiveCheck() {
   const [piva, setPiva] = useState('')
@@ -54,6 +56,10 @@ export function LiveCheck() {
         () => {
           setEsito(risultato)
           setFase('esito')
+          trackFunnel('demo_complete', {
+            stato: risultato.stato,
+            fonti: risultato.provider.length,
+          })
         },
         passo * 3 + (ridotto ? 0 : 380),
       ),
@@ -62,32 +68,48 @@ export function LiveCheck() {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    trackFunnel('demo_start')
     esegui(piva)
   }
 
   const usaEsempio = (valore: string) => {
+    trackFunnel('demo_start')
     setPiva(valore)
     esegui(valore)
   }
 
   return (
-    <section
-      id="prova"
-      data-tone="ink"
-      className="chapter chapter-full bg-paper text-ink"
-    >
+    <section id="prova" data-tone="ink" className="chapter chapter-full bg-paper text-ink">
       <div className="grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-6">
         <div className="md:col-span-5">
-          <h2 className="headline text-head">Provaci con una partita IVA.</h2>
+          <h2 className="headline text-head">Guarda com'è fatto un verdetto.</h2>
           <p className="mt-5 max-w-[40ch] text-body">
-            Demo con dati di esempio: nessuna azienda reale viene interrogata, nessuna visura
-            viene addebitata.
+            Questa è una demo: i dati sono inventati e nessuna azienda viene interrogata. Nel
+            prodotto vero bastano ragione sociale e partita IVA.
           </p>
 
-          <form onSubmit={onSubmit} className="mt-8">
-            <label htmlFor="piva" className="text-small font-semibold">
-              Partita IVA (11 cifre)
-            </label>
+          <form onSubmit={onSubmit} className="mt-8 space-y-4">
+            <div className="space-y-2">
+              <label htmlFor="piva" className="text-small font-semibold">
+                Partita IVA (11 cifre)
+              </label>
+              <p className="text-xs text-ink/40 uppercase tracking-wider">
+                Oppure scegli un esempio
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {ESEMPI_DEMO.map((e) => (
+                  <button
+                    key={e.partitaIva}
+                    type="button"
+                    onClick={() => usaEsempio(e.partitaIva)}
+                    className="tap-target num rounded border-2 border-ink bg-transparent px-3 py-2 text-small font-medium transition-colors hover:bg-ink hover:text-paper focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+                  >
+                    {e.partitaIva}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <div className="mt-2 flex flex-col gap-2 sm:flex-row">
               <input
                 id="piva"
@@ -105,26 +127,13 @@ export function LiveCheck() {
                 type="submit"
                 className="btn btn-ink shrink-0"
                 disabled={piva.replace(/\D/g, '').length < 11}
-                style={{ opacity: piva.replace(/\D/g, '').length < 11 ? 0.45 : 1 }}
+                style={{
+                  opacity: piva.replace(/\D/g, '').length < 11 ? 0.45 : 1,
+                }}
               >
-                Verifica
+                Mostra il verdetto
               </button>
             </div>
-            <p id="piva-aiuto" className="mt-3 text-small">
-              Oppure prova con:{' '}
-              {ESEMPI_DEMO.map((e, i) => (
-                <span key={e.partitaIva}>
-                  {i > 0 && ' · '}
-                  <button
-                    type="button"
-                    onClick={() => usaEsempio(e.partitaIva)}
-                    className="num font-semibold underline decoration-2 underline-offset-4 hover:no-underline"
-                  >
-                    {e.partitaIva}
-                  </button>
-                </span>
-              ))}
-            </p>
           </form>
         </div>
 
@@ -149,20 +158,27 @@ function PannelloEsito({
 
   return (
     <div className="ui ui-ink p-5 md:p-7" data-ui="esito-verifica">
-      <div className="flex items-center justify-between gap-4">
-        <p className="text-small font-semibold">Esito verifica</p>
+      <div className="flex items-start justify-between gap-4 mb-6">
+        <div>
+          <p className="text-[0.75rem] font-bold uppercase tracking-wider text-paper/50">
+            Demo — dati di esempio
+          </p>
+          <p className="text-small font-semibold text-paper">Esito verifica</p>
+        </div>
         <p className="num text-small opacity-60">
-          {esito ? `${esito.provider.length} fonti · 00:${fase === 'esito' ? '31' : '00'}` : '3 fonti'}
+          {esito ? `${esito.provider.length} fonti` : '— fonti'}
         </p>
       </div>
 
       <div className="mt-6 flex items-start justify-between gap-5">
         <div className="min-w-0">
-          <p className="headline truncate text-[1.35rem] leading-tight">
-            {esito ? esito.ragioneSociale : 'In attesa di una partita IVA'}
+          <p className="headline truncate text-[1.35rem] leading-tight text-paper">
+            {esito ? esito.ragioneSociale : 'Seleziona un esempio'}
           </p>
-          <p className="num mt-1 text-small opacity-70">
-            {esito ? `${esito.partitaIva} · ${esito.citta} · ${esito.settore}` : 'Incolla le 11 cifre qui a sinistra'}
+          <p className="num mt-1 text-small opacity-60">
+            {esito
+              ? `${esito.partitaIva} · ${esito.citta} · ${esito.settore}`
+              : 'Scegli un esempio a sinistra per vedere le tre fonti e la raccomandazione.'}
           </p>
         </div>
         <Semaforo stato={esito?.stato ?? 'VERDE'} size="lg" />
@@ -194,11 +210,13 @@ function PannelloEsito({
       </ul>
 
       <div
-        className="mt-6 p-4"
+        className="mt-6 p-4 rounded"
         style={{
           color: 'var(--ink)',
           borderRadius: 2,
-          backgroundColor: esito ? `var(--${esito.stato.toLowerCase()})` : 'rgba(241,241,236,0.06)',
+          backgroundColor: esito
+            ? `var(--${esito.stato.toLowerCase()})`
+            : 'rgba(241,241,236,0.06)',
           outlineOffset: '-2px',
         }}
       >
@@ -220,6 +238,17 @@ function PannelloEsito({
           </p>
         )}
       </div>
+
+      {esito && (
+        <div className="mt-6 flex items-center gap-3">
+          <span className="num text-[0.75rem] font-bold uppercase tracking-wider opacity-70">
+            Demo
+          </span>
+          <Link to="/register" className="btn btn-ink text-sm">
+            Prova su un cliente vero — 5 check gratis
+          </Link>
+        </div>
+      )}
 
       <p className="mt-4 text-[0.75rem] leading-snug opacity-60">
         {esito ? esito.fonte : 'Demo: dati di esempio, nessuna azienda reale.'}

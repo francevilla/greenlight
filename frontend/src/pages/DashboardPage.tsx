@@ -10,6 +10,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/Tabs'
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/Tooltip'
 import { Separator } from '@/components/ui/Separator'
 import { toast } from '@/components/ui/Toaster'
+import { trackFunnel } from '@/lib/analytics'
 import {
   Plus,
   Search,
@@ -66,7 +67,6 @@ export default function DashboardPage() {
   const handleSubmit = async (data: {
     companyName: string
     vatNumber: string
-    taxCode: string
     provider: 'CERVED' | 'CRIBIS' | 'CREDITSAFE'
   }) => {
     setSubmitting(true)
@@ -76,6 +76,7 @@ export default function DashboardPage() {
       setActiveTab('history')
       await loadData()
       toast.success('Verifica completata. Report disponibile.')
+      trackFunnel('first_check_complete')
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Errore durante la verifica'
       toast.error(message)
@@ -117,42 +118,6 @@ export default function DashboardPage() {
                 </div>
                 <span className="text-xl font-bold tracking-tight hidden sm:block font-serif">Greenlight</span>
               </Link>
-
-              <nav className="hidden md:flex items-center gap-1">
-                <button
-                  className={cn(
-                    'px-3 py-2 rounded-lg text-sm font-medium transition-colors',
-                    activeTab === 'new'
-                      ? 'bg-primary text-primary-foreground'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
-                  )}
-                  onClick={() => setActiveTab('new')}
-                >
-                  <Plus className="w-4 h-4 mr-1 inline" /> Nuova Verifica
-                </button>
-                <button
-                  className={cn(
-                    'px-3 py-2 rounded-lg text-sm font-medium transition-colors',
-                    activeTab === 'history'
-                      ? 'bg-primary text-primary-foreground'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
-                  )}
-                  onClick={() => setActiveTab('history')}
-                >
-                  <History className="w-4 h-4 mr-1 inline" /> Storico
-                </button>
-                <button
-                  className={cn(
-                    'px-3 py-2 rounded-lg text-sm font-medium transition-colors',
-                    activeTab === 'stats'
-                      ? 'bg-primary text-primary-foreground'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
-                  )}
-                  onClick={() => setActiveTab('stats')}
-                >
-                  <BarChart3 className="w-4 h-4 mr-1 inline" /> Statistiche
-                </button>
-              </nav>
             </div>
 
             <div className="flex items-center gap-4">
@@ -196,7 +161,7 @@ export default function DashboardPage() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="grid grid-cols-2 md:grid-cols-4 gap-4"
+                className="grid grid-cols-1 md:grid-cols-4 gap-4"
               >
                 <KpiCard
                   label="Piano"
@@ -205,7 +170,7 @@ export default function DashboardPage() {
                   color="neutral"
                 />
                 <KpiCard
-                  label="Check usati questo mese"
+                  label="Verifiche usate questo mese"
                   value={`${stats.used} / ${stats.limit}`}
                   icon={<Search className="w-5 h-5" />}
                   progress={stats.limit > 0 ? (stats.used / stats.limit) * 100 : 0}
