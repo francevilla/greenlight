@@ -1,5 +1,6 @@
 import { SiteHeader } from '@/components/landing/SiteHeader'
 import { Hero } from '@/components/landing/Hero'
+import { ProofStrip } from '@/components/landing/ProofStrip'
 import { LiveCheck } from '@/components/landing/LiveCheck'
 import { HowItWorks } from '@/components/landing/HowItWorks'
 import { States } from '@/components/landing/States'
@@ -15,6 +16,7 @@ export default function SemaforoSite() {
       <SiteHeader />
       <main>
         <Hero />
+        <ProofStrip />
         <LiveCheck />
         <HowItWorks />
         <States />

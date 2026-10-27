@@ -22,7 +22,7 @@ export interface CreditCheckResponse {
 export interface CreditCheckRequest {
   companyName: string
   vatNumber: string
-  taxCode: string
+  taxCode?: string
   provider: 'CERVED' | 'CRIBIS' | 'CREDITSAFE'
 }
 

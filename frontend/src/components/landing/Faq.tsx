@@ -1,35 +1,58 @@
+import { useEffect } from 'react'
+
 const DOMANDE = [
   {
-    q: 'Da dove vengono i dati?',
-    a: 'Dai tre provider di informazioni commerciali: Cerved, Cribis e Credit Safe, interrogati via API. Greenlight non produce punteggi propri: aggrega le loro risposte e le traduce in un semaforo.',
+    q: 'È un altro abbonamento?',
+    a: 'No. I primi 5 check al mese sono gratis, senza carta di credito. Paghi solo se superi la soglia Free.',
   },
   {
-    q: 'Che dati conservate dei miei clienti?',
-    a: 'La ragione sociale, la partita IVA e il codice fiscale che inserisci, più l’esito della verifica. Nient’altro: non carichi documenti, non alleghi visure.',
+    q: 'Non so leggere uno score.',
+    a: 'Non usiamo score complicati. Usiamo il semaforo: verde = affidabile, giallo = attenzione, rosso = fermati.',
   },
   {
-    q: 'Quanto ci vuole per una verifica?',
-    a: 'La risposta arriva in pochi secondi quando il provider è raggiungibile. Se una fonte è lenta, vedi le altre due comparire prima e quella mancante arrivare dopo.',
+    q: 'Ho già Cerved.',
+    a: 'Cerved va bene per le grandi pratiche. Greenlight è per la decisione rapida, prima di firmare un contratto, in 30 secondi.',
   },
   {
-    q: 'Posso lavorare in più persone sullo stesso account?',
-    a: 'Dal piano Pro sì: ruoli e permessi separati, con un limite di verifiche condiviso. Su Basic l’account è personale.',
+    q: 'I dati sono ufficiali?',
+    a: 'Interroghiamo Cerved, Cribis e Credit Safe, i principali provider di informazioni commerciali italiani. Stessa fonte, interfaccia umana.',
+  },
+  {
+    q: 'I miei dati e quelli dei miei clienti sono al sicuro?',
+    a: 'Conserviamo email, ragione sociale, partita IVA ed esito della verifica. Nessun documento caricato. Dati cifrati in transito e a riposo, server in UE, nessuna vendita a terzi. *(da validare con il legale prima della pubblicazione)*',
   },
   {
     q: 'Cosa succede se finisco le verifiche del mese?',
-    a: 'Il semaforo smette di rispondere fino al rinnovo, senza addebiti a sorpresa. Puoi passare a un piano superiore in qualsiasi momento e le verifiche nuove sono disponibili subito.',
-  },
-  {
-    q: 'Serve la carta di credito per provare?',
-    a: 'No. Il piano Free dà cinque verifiche al mese e non chiede dati di pagamento. La carta serve solo se decidi di passare a Basic o Pro.',
+    a: 'Il semaforo smette di rispondere fino al rinnovo, senza addebiti a sorpresa. Puoi passare a un piano superiore in qualsiasi momento.',
   },
   {
     q: 'Il semaforo sostituisce una valutazione legale?',
-    a: 'No. È uno strumento di supporto alla decisione commerciale: dice quanto è rischioso aprire un credito, non sostituisce bilanci certificati, garanzie o il parere di un professionista.',
+    a: 'No. È uno strumento di supporto alla decisione commerciale: non sostituisce bilanci certificati, garanzie o il parere di un professionista.',
   },
 ]
 
 export function Faq() {
+  useEffect(() => {
+    const script = document.createElement('script')
+    script.type = 'application/ld+json'
+    script.textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: DOMANDE.map((d) => ({
+        '@type': 'Question',
+        name: d.q,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: d.a,
+        },
+      })),
+    })
+    document.head.appendChild(script)
+    return () => {
+      document.head.removeChild(script)
+    }
+  }, [])
+
   return (
     <section id="domande" data-tone="ink" className="chapter bg-paper text-ink">
       <div className="grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-6">
@@ -46,7 +69,7 @@ export function Faq() {
             {DOMANDE.map((d) => (
               <details
                 key={d.q}
-                className="group bg-ink/[0.045] open:bg-verde"
+                className="group bg-ink/[0.045] open:bg-verde open:text-ink"
                 style={{ borderRadius: 2 }}
               >
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-6 px-5 py-5 text-body font-semibold [&::-webkit-details-marker]:hidden">

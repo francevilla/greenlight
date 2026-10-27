@@ -42,6 +42,7 @@ export default {
 
         // Brand semantic — Verde Foresta (primary firm)
         verde: {
+          DEFAULT: 'rgb(23 178 106)',
           50: 'rgb(240 253 244 / <alpha-value>)',
           100: 'rgb(220 252 231 / <alpha-value>)',
           500: 'rgb(34 197 94 / <alpha-value>)',

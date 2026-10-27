@@ -3,20 +3,12 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Label } from '@/components/ui/Label'
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from '@/components/ui/Select'
 
 type Provider = 'CERVED' | 'CRIBIS' | 'CREDITSAFE'
 
 interface FormData {
   companyName: string
   vatNumber: string
-  taxCode: string
   provider: Provider
 }
 
@@ -38,25 +30,16 @@ export function CreditCheckForm({
   const [formData, setFormData] = useState<FormData>({
     companyName: '',
     vatNumber: '',
-    taxCode: '',
     provider: 'CERVED',
   })
   const [formErrors, setFormErrors] = useState<Record<string, string>>({})
 
   const validate = (): boolean => {
     const errors: Record<string, string> = {}
-    if (!formData.companyName.trim()) {
-      errors.companyName = 'Ragione sociale obbligatoria'
-    }
     if (!formData.vatNumber.trim()) {
       errors.vatNumber = 'Partita IVA obbligatoria'
     } else if (formData.vatNumber.length !== 11 || !/^\d+$/.test(formData.vatNumber)) {
       errors.vatNumber = 'Partita IVA deve essere 11 cifre'
-    }
-    if (!formData.taxCode.trim()) {
-      errors.taxCode = 'Codice fiscale obbligatorio'
-    } else if (formData.taxCode.length !== 16) {
-      errors.taxCode = 'Codice fiscale deve essere 16 caratteri'
     }
     setFormErrors(errors)
     return Object.keys(errors).length === 0
@@ -71,22 +54,16 @@ export function CreditCheckForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-2 md:col-span-2">
-          <Label htmlFor="companyName">Ragione sociale</Label>
+        <div className="space-y-2">
+          <Label htmlFor="companyName">Ragione sociale (opzionale)</Label>
           <Input
             id="companyName"
             placeholder="Es: Acme Marketing S.r.l."
             value={formData.companyName}
             onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
-            error={!!formErrors.companyName}
           />
-          {formErrors.companyName && (
-            <p className="text-sm text-semantic-rosso">
-              {formErrors.companyName}
-            </p>
-          )}
         </div>
-        <div className="space-y-2">
+        <div className="space-y-2 md:col-span-2">
           <Label htmlFor="vatNumber">Partita IVA</Label>
           <Input
             id="vatNumber"
@@ -103,47 +80,37 @@ export function CreditCheckForm({
             </p>
           )}
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="taxCode">Codice fiscale</Label>
-          <Input
-            id="taxCode"
-            maxLength={16}
-            placeholder="RSSMRA80A01H501Z"
-            value={formData.taxCode}
-            onChange={(e) => setFormData({ ...formData, taxCode: e.target.value.toUpperCase() })}
-            error={!!formErrors.taxCode}
-          />
-          {formErrors.taxCode && (
-            <p className="text-sm text-semantic-rosso">
-              {formErrors.taxCode}
-            </p>
-          )}
-        </div>
       </div>
 
       <div className="space-y-2">
         <Label htmlFor="provider">Fonte dati</Label>
-        <Select
-          value={formData.provider}
-          onValueChange={(v) => setFormData({ ...formData, provider: v as Provider })}
-        >
-          <SelectTrigger id="provider">
-            <SelectValue placeholder="Seleziona fonte" />
-          </SelectTrigger>
-          <SelectContent>
-            {PROVIDERS.map((p) => (
-              <SelectItem key={p.value} value={p.value}>
-                {p.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+          {PROVIDERS.map((p) => (
+            <button
+              key={p.value}
+              type="button"
+              role="radio"
+              aria-checked={formData.provider === p.value}
+              onClick={() => setFormData({ ...formData, provider: p.value as Provider })}
+              className={`tap-target py-3 rounded-lg border text-sm font-medium transition-colors ${
+                formData.provider === p.value
+                  ? 'border-verde bg-[rgba(23,178,106,0.1)] text-ink'
+                  : 'border-border text-ink/60 hover:border-border/50'
+              }`}
+            >
+              {p.label}
+            </button>
+          ))}
+        </div>
+        <p className="text-[0.75rem] text-ink/50 leading-relaxed">
+          Il CF viene derivato automaticamente dalla partita IVA. Primo check: gratuito, senza carta.
+        </p>
       </div>
 
       <div className="flex gap-4 pt-4 border-t border-border">
         <Button
           type="submit"
-          className="flex-1"
+          className="flex-1 bg-verde text-ink hover:bg-[#15803d]"
           disabled={submitting}
           size="lg"
         >
@@ -153,7 +120,7 @@ export function CreditCheckForm({
           type="button"
           variant="outline"
           onClick={() =>
-            setFormData({ companyName: '', vatNumber: '', taxCode: '', provider: 'CERVED' })
+            setFormData({ companyName: '', vatNumber: '', provider: 'CERVED' })
           }
           disabled={submitting}
         >

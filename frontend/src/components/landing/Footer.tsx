@@ -26,7 +26,7 @@ export function Footer() {
               <a
                 key={n.href}
                 href={n.href}
-                className="text-body font-medium underline decoration-1 underline-offset-4 hover:decoration-2"
+                className="tap-target text-body font-medium underline decoration-1 underline-offset-4 hover:decoration-2"
               >
                 {n.label}
               </a>
@@ -58,9 +58,33 @@ export function Footer() {
             Cinque verifiche gratis.
           </p>
           <span className="text-small font-semibold underline decoration-2 underline-offset-4">
-            Inizia adesso →
+            Apri l'account →
           </span>
         </Link>
+      </div>
+
+      <div className="mt-8 flex flex-col md:flex-row md:items-center justify-between gap-2 border-t border-border/10 pt-6 text-xs text-paper/40">
+        <p className="max-w-md">
+          Greenlight SaaS · P.IVA 00000000000 · Sede legale, Italia
+        </p>
+        <nav className="flex flex-wrap gap-4 text-paper/50">
+          <a href="/legali#termini" className="hover:text-paper underline decoration-1 underline-offset-4">
+            Termini
+          </a>
+          <a href="/legali#privacy" className="hover:text-paper underline decoration-1 underline-offset-4">
+            Privacy
+          </a>
+          <a href="/legali#cookie" className="hover:text-paper underline decoration-1 underline-offset-4">
+            Cookie
+          </a>
+          <a href="/legali#dpa" className="hover:text-paper underline decoration-1 underline-offset-4">
+            DPA
+          </a>
+          <a href="/legali#stato" className="hover:text-paper underline decoration-1 underline-offset-4">
+            Stato del servizio
+          </a>
+        </nav>
+        <p>© 2026 Greenlight. Tutti i diritti riservati.</p>
       </div>
     </footer>
   )

@@ -1,33 +1,38 @@
-import { SOGLIE, STATO_NOME, type Segnale } from '@/lib/demo'
+import { SOGLIE, type Segnale } from '@/lib/demo'
 
 const CAPITOLI: Array<{
   stato: Segnale
   fondo: string
-  cosa: string
+  azione: string
+  perche: string
   esempio: { azienda: string; score: number }
 }> = [
   {
     stato: 'VERDE',
     fondo: 'var(--verde)',
-    cosa: 'Segnale pulito: le tre fonti concordano e non ci sono protesti aperti.',
+    azione: 'Firmi.',
+    perche: 'Procedi con il contratto standard, senza garanzie aggiuntive.',
     esempio: { azienda: 'Officina Meccanica Bellini S.r.l.', score: 87 },
   },
   {
     stato: 'GIALLO',
     fondo: 'var(--giallo)',
-    cosa: 'Qualcosa non torna: ritardi di pagamento ricorrenti o bilanci in calo.',
+    azione: 'Chiedi un acconto.',
+    perche: 'Anticipo o fideiussione, pagamenti a 30 giorni.',
     esempio: { azienda: 'Atelier Grafico Ferrante S.n.c.', score: 66 },
   },
   {
     stato: 'ARANCIONE',
     fondo: 'var(--arancio)',
-    cosa: 'Il rischio è concreto: esposizione da tenere sotto controllo mese per mese.',
+    azione: 'Spezza l’ordine.',
+    perche: 'Consegna a tranche, monitoraggio ogni 30 giorni.',
     esempio: { azienda: 'Costruzioni Delta S.p.A.', score: 41 },
   },
   {
     stato: 'ROSSO',
     fondo: 'var(--rosso)',
-    cosa: 'Non insistere: senza garanzie, ogni euro anticipato è un euro a rischio.',
+    azione: 'Non firmi.',
+    perche: 'Nessuna apertura senza pagamento anticipato o garanzia bancaria.',
     esempio: { azienda: 'Emporio Veneto Distribuzione S.r.l.', score: 22 },
   },
 ]
@@ -35,53 +40,44 @@ const CAPITOLI: Array<{
 export function States() {
   return (
     <section id="stati" aria-label="I quattro stati del semaforo">
-      {CAPITOLI.map((c, i) => {
-        const soglia = SOGLIE[c.stato]
-        return (
-          <article
-            key={c.stato}
-            data-tone="ink"
-            className="chapter flex flex-col justify-center text-ink"
-            style={{
-              backgroundColor: c.fondo,
-              minHeight: i === 0 ? '86svh' : '62svh',
-            }}
-          >
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-12 md:gap-6">
-              <div className={i === 0 ? 'md:col-span-6' : 'md:col-span-7'}>
-                {i === 0 && (
-                  <p className="mb-6 text-small font-semibold">Quattro stati, quattro decisioni</p>
-                )}
-                <h2 className="display text-[clamp(2.75rem,9vw,7.5rem)] uppercase">
-                  {STATO_NOME[c.stato]}
-                </h2>
-                <p className="num mt-4 text-lead font-medium">
-                  score {soglia.min}–{soglia.max} · {soglia.lettura}
-                </p>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        {CAPITOLI.map((c) => {
+          const soglia = SOGLIE[c.stato]
+          const testoScuro =
+            c.stato === 'VERDE' || c.stato === 'ARANCIONE' || c.stato === 'ROSSO'
+          return (
+            <article
+              key={c.stato}
+              className="flex flex-col rounded border p-6 min-h-[320px] text-ink"
+              style={{
+                backgroundColor: c.fondo,
+                color: testoScuro ? '#0b0c0b' : '#0b0c0b',
+              }}
+            >
+              <div className="flex items-start justify-between mb-4">
+                <span className="text-xs font-semibold uppercase tracking-wider opacity-70">
+                  {c.stato}
+                </span>
+                <span className="num text-sm font-medium opacity-80">
+                  score {soglia.min}–{soglia.max}
+                </span>
               </div>
-
-              <div className="md:col-span-5 md:col-start-8 md:self-end">
-                <p className="max-w-[42ch] text-body font-medium">{c.cosa}</p>
-                <p className="mt-3 max-w-[42ch] text-lead">{soglia.azione}</p>
-
-                {i === 0 ? (
-                  <div className="mt-8 bg-ink p-4 text-paper" data-ui="esempio-esito">
-                    <p className="text-small opacity-60">Esempio</p>
-                    <p className="headline mt-1 text-[1.15rem] leading-tight">{c.esempio.azienda}</p>
-                    <p className="num mt-1 text-small">
-                      score {c.esempio.score} · Cerved, Cribis e Credit Safe concordi
-                    </p>
-                  </div>
-                ) : (
-                  <p className="num mt-6 text-small font-semibold">
-                    Esempio: {c.esempio.azienda} · score {c.esempio.score}
-                  </p>
-                )}
+              <h3 className="mb-3 text-[1.75rem] leading-none font-bold uppercase">{c.azione}</h3>
+              <p className="mb-4 text-body leading-relaxed opacity-90">{c.perche}</p>
+              <div className="mt-auto pt-6 border-t border-current/20">
+                <p className="text-xs font-semibold opacity-60 uppercase">Esempio</p>
+                <p className="text-lead font-medium">{c.esempio.azienda}</p>
+                <p className="num text-small">{c.esempio.score}</p>
               </div>
-            </div>
-          </article>
-        )
-      })}
+            </article>
+          )
+        })}
+      </div>
+
+      <p className="mt-10 max-w-[56ch] text-[0.875rem] text-ink/60 leading-relaxed">
+        Il punteggio resta un dato tecnico: lo trovi nel report di ogni verifica. Nella pagina
+        principale conta solo la decisione — il colore e cosa fare dopo.
+      </p>
     </section>
   )
 }

@@ -1,11 +1,15 @@
+import { Suspense, lazy } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from '@/hooks/useAuth'
 import { Toaster } from '@/components/ui/Toaster'
-import LandingPage from '@/pages/LandingPage'
 import SemaforoSite from '@/pages/SemaforoSite'
 import LoginPage from '@/pages/LoginPage'
 import RegisterPage from '@/pages/RegisterPage'
-import DashboardPage from '@/pages/DashboardPage'
+import LegaliPage from '@/pages/LegaliPage'
+import ForgotPasswordPage from '@/pages/ForgotPasswordPage'
+import ManifestoPage from '@/pages/ManifestoPage'
+
+const DashboardPage = lazy(() => import('@/pages/DashboardPage'))
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth()
@@ -38,8 +42,8 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<LandingPage />} />
-      <Route path="/semaforo" element={<SemaforoSite />} />
+      <Route path="/" element={<SemaforoSite />} />
+      <Route path="/semaforo" element={<Navigate to="/" replace />} />
       <Route 
         path="/login" 
         element={
@@ -59,11 +63,20 @@ function AppRoutes() {
       <Route 
         path="/dashboard" 
         element={
-          <PrivateRoute>
-            <DashboardPage />
-          </PrivateRoute>
+          <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center">
+              <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+            </div>
+          }>
+            <PrivateRoute>
+              <DashboardPage />
+            </PrivateRoute>
+          </Suspense>
         } 
       />
+      <Route path="/legali" element={<LegaliPage />} />
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/manifesto" element={<ManifestoPage />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
